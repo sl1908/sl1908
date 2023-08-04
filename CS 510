@@ -1,0 +1,66 @@
+import java.util.*;
+
+public class Main {
+
+    public static String findUniqueSubstring(String S) {
+        Map<Integer, List<Integer>> dpDict = new HashMap<>();
+        StringBuilder uniqueSubsequence = new StringBuilder();
+
+        for (int i = 0; i < S.length(); i++) {
+            int currentChar = convertEvenAsciiToNegative(S.charAt(i));
+            List<Integer> newSubsequence = new ArrayList<>();
+            newSubsequence.add(currentChar);
+
+            if (dpDict.containsKey(currentChar)) {
+                dpDict.get(currentChar).add(currentChar);
+                newSubsequence = null;
+            } else {
+                dpDict.put(currentChar, newSubsequence);
+            }
+
+            if (newSubsequence != null) {
+                dpDict.put(currentChar, newSubsequence);
+            }
+        }
+
+        int maxLength = 0;
+        List<Integer> maxSubsequence = null;
+
+        for (List<Integer> subsequence : dpDict.values()) {
+            if (subsequence.size() > maxLength) {
+                maxLength = subsequence.size();
+                maxSubsequence = subsequence;
+            }
+        }
+
+        if (maxSubsequence != null) {
+            for (int val : maxSubsequence) {
+                uniqueSubsequence.append((char) (-val));
+            }
+        }
+
+        return uniqueSubsequence.toString();
+    }
+
+    private static int convertEvenAsciiToNegative(char ch) {
+        int asciiVal = (int) ch;
+        if (asciiVal % 2 == 0) {
+            return -asciiVal;
+        }
+        return asciiVal;
+    }
+
+    public static void main(String[] args) {
+        String input1 = "california";
+        String output1 = findUniqueSubstring(input1);
+        System.out.println("Input: '" + input1 + "', Output: '" + output1 + "'");
+
+        String input2 = "banana";
+        String output2 = findUniqueSubstring(input2);
+        System.out.println("Input: '" + input2 + "', Output: '" + output2 + "'");
+
+        String input3 = "mississippi";
+        String output3 = findUniqueSubstring(input3);
+        System.out.println("Input: '" + input3 + "', Output: '" + output3 + "'");
+    }
+}
